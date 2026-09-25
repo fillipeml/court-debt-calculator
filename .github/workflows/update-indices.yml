@@ -1,0 +1,73 @@
+name: Update indices
+
+on:
+  schedule:
+    - cron: "0 11 * * *" # daily at 11:00 UTC, after the central bank's morning publications
+  workflow_dispatch:
+    inputs:
+      allow_revision:
+        description: "Accept retroactive changes of already stored values (after a human check)"
+        type: boolean
+        default: false
+
+permissions:
+  contents: write
+
+concurrency:
+  group: update-indices
+  cancel-in-progress: false
+
+jobs:
+  update:
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          persist-credentials: true
+
+      - uses: astral-sh/setup-uv@c18668ad3cf93ea998bef934396af7bb5c839dc7 # v10.2.0
+        with:
+          enable-cache: true
+
+      - name: Install
+        run: uv sync --frozen --no-dev
+
+      - name: Fetch the series from the central bank
+        id: ingest
+        run: |
+          set +e
+          if [ "${{ inputs.allow_revision }}" = "true" ]; then
+            uv run update-indices --allow-revision
+          else
+            uv run update-indices
+          fi
+          echo "exit=$?" >> "$GITHUB_OUTPUT"
+
+      - name: Fail on a retroactive revision
+        if: steps.ingest.outputs.exit == '2'
+        run: |
+          echo "::error::A stored index value changed at the source. Check it and re-run with allow_revision=true."
+          exit 2
+
+      - name: Fail on a network or validation error
+        if: steps.ingest.outputs.exit == '1'
+        run: exit 1
+
+      - name: Run the golden tests against the fresh data
+        run: uv sync --frozen && uv run pytest tests/engine -q
+
+      - name: Commit the updated series
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add indices/data
+          if git diff --cached --quiet; then
+            echo "No changes."
+          else
+            git commit -m "chore(indices): update central-bank series $(date -u +%Y-%m-%d)"
+            git push
+          fi
+
+      - name: Check publication lag
+        run: uv run update-indices --check-lag
