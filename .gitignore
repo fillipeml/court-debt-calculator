@@ -1,0 +1,40 @@
+# secrets and per-installation config
+.env
+.env.*
+!.env.example
+*.pem
+*.pfx
+*.p12
+
+# scan output
+sanitize-report.*
+
+# AI tooling local state
+.claude/settings.local.json
+.claude/*.local.*
+
+# python
+__pycache__/
+*.pyc
+.venv/
+.pytest_cache/
+.ruff_cache/
+build/
+dist/
+*.egg-info/
+
+# node (the web app has its own .gitignore too)
+node_modules/
+web/.next/
+web/out/
+web/next-env.d.ts
+*.tsbuildinfo
+
+# vercel
+.vercel
+
+# OS / IDE
+.DS_Store
+Thumbs.db
+.vscode/
+.idea/
