@@ -1,0 +1,11 @@
+{
+  "final_date": "2026-05-22",
+  "adjust_until": "2026-04",
+  "index": "tjdft",
+  "interest": { "regime": "legal", "start": "2026-05-15" },
+  "fine_523_pct": "10",
+  "fee_523_pct": "10",
+  "installments": [
+    { "amount": "134000.00", "on": "2022-03-02", "description": "Economic benefit (reference case 05)" }
+  ]
+}
