@@ -1,0 +1,8 @@
+{
+  "functions": {
+    "api/index.py": {
+      "includeFiles": "{src/**,indices/data/**,api/**}",
+      "maxDuration": 60
+    }
+  }
+}
