@@ -3,7 +3,7 @@
  "name": "Legal Rate (Civil Code art. 406, Law 14,905/2024)",
  "unit": "% per month",
  "source": "https://api.bcb.gov.br/dados/serie/bcdata.sgs.29543/dados?formato=json",
- "captured_at": "2026-08-03T13:42:16+00:00",
+ "captured_at": "2026-09-26T14:54:44+00:00",
  "note": "Published by the central bank at the start of each month, for that month (CMN Resolution 5,171/2024).",
  "months": {
   "2024-08": "0.605306",
@@ -30,6 +30,7 @@
   "2026-05": "0.198293",
   "2026-06": "0.450641",
   "2026-07": "0.706607",
-  "2026-08": "1.154527"
+  "2026-08": "1.154527",
+  "2026-09": "1.499119"
  }
 }
