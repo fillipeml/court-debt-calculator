@@ -54,6 +54,9 @@ export const today = (): string => new Date().toISOString().slice(0, 10);
 
 export const previousMonth = (): string => {
   const d = new Date();
+  // Step the day to the 1st first: setMonth keeps the day number, so on the 31st of a month
+  // whose predecessor is shorter it overflows forward and lands back in the current month.
+  d.setDate(1);
   d.setMonth(d.getMonth() - 1);
   return `${d.getFullYear()}-${String(d.getMonth() + 1).padStart(2, "0")}`;
 };
