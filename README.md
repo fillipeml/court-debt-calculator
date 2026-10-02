@@ -100,7 +100,7 @@ In production the documents of a case (judgment, payment history, contract) are 
 
 ## Tests & CI
 
-`uv run pytest` runs 185 tests offline: the index repository on synthetic and real series, the interest conventions on synthetic rates, the fourteen reference cases, the deductions cascade, the three kinds of fees, dated entries, the late fine, the API end to end (including a PDF opened and read back, token protection, spreadsheet conversion, the simulated extraction and the normalisation of free-text answers). `npm test` in `web/` runs 51 checks on the formatting, the spreadsheet import heuristics and the API client helpers. CI runs lint, the tests, a CLI smoke test on the sample case, the index lag check, the web type check, lint, tests and production build, and a gitleaks scan; a second workflow updates the indices daily and re-runs the goldens against the fresh data before committing.
+`uv run pytest` runs 191 tests offline: the index repository on synthetic and real series, the interest conventions on synthetic rates, the fourteen reference cases, the deductions cascade, the three kinds of fees, dated entries, the late fine, the API end to end (including a PDF opened and read back, token protection, spreadsheet conversion, the simulated extraction and the normalisation of free-text answers). `npm test` in `web/` runs 51 checks on the formatting, the spreadsheet import heuristics and the API client helpers. CI runs lint, the tests, a CLI smoke test on the sample case, the index lag check, the web type check, lint, tests and production build, and a gitleaks scan; a second workflow updates the indices daily and re-runs the goldens against the fresh data before committing.
 
 ## Stack
 

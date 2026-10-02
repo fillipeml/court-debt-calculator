@@ -17,9 +17,14 @@ MONTH_REGEX = r"^\d{4}-(0[1-9]|1[0-2])$"
 
 def _valid_decimal(value: str, field: str) -> str:
     try:
-        Decimal(value)
+        parsed = Decimal(value)
     except InvalidOperation:
         raise ValueError(f"{field} is not a valid decimal number: {value!r}") from None
+    # "NaN" and "Infinity" are valid Decimal literals. Without this the API answered 200 with
+    # NaN money totals, and the signalling forms crashed the request with an uncaught
+    # InvalidOperation from the first arithmetic that touched them.
+    if not parsed.is_finite():
+        raise ValueError(f"{field} must be a finite number: {value!r}")
     return value
 
 

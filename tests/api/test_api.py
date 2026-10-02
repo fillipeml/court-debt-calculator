@@ -185,6 +185,17 @@ class TestCalculate:
         entry = {**CASE_05, "installments": [{"amount": "abc", "on": "2022-03-02"}]}
         assert client.post("/calculate", json=entry).status_code == 422
 
+    @pytest.mark.parametrize("amount", ["NaN", "nan", "Infinity", "-Infinity", "inf", "sNaN"])
+    def test_a_non_finite_amount_is_rejected(self, amount: str):
+        """These are valid Decimal literals, which is the whole problem.
+
+        The validator only asked whether Decimal() would parse the string. It parses all of
+        these, so the API answered 200 with NaN money totals for the quiet ones and crashed
+        with an uncaught InvalidOperation on the signalling ones.
+        """
+        entry = {**CASE_05, "installments": [{"amount": amount, "on": "2022-03-02"}]}
+        assert client.post("/calculate", json=entry).status_code == 422
+
     def test_negative_or_zero_amounts_are_rejected(self):
         # a negative installment is not an abatement: the right door is a deduction/discount
         for payload in (
