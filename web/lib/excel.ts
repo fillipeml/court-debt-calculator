@@ -147,7 +147,12 @@ export function findColumn(row: Record<string, unknown>, terms: string[]): unkno
 }
 
 export function toISO(raw: unknown): string | null {
-  if (raw instanceof Date && !isNaN(raw.getTime())) return raw.toISOString().slice(0, 10);
+  if (raw instanceof Date && !isNaN(raw.getTime())) {
+    // Local components, not toISOString. SheetJS builds the cell at LOCAL midnight, which in
+    // any UTC+ zone is the previous day in UTC — so every imported payment date moved back
+    // one day for a user in Europe, and nowhere for one in Brazil.
+    return `${raw.getFullYear()}-${String(raw.getMonth() + 1).padStart(2, "0")}-${String(raw.getDate()).padStart(2, "0")}`;
+  }
   if (typeof raw === "string") {
     const br = raw.trim().match(/^(\d{1,2})[\/\-.](\d{1,2})[\/\-.](\d{4})$/);
     if (br) return `${br[3]}-${br[2].padStart(2, "0")}-${br[1].padStart(2, "0")}`;
